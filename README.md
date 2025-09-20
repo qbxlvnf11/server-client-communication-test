@@ -5,7 +5,7 @@ Run Server
     * Containers on the same network can communicate with each other by their container name.
 
 ```
-docker network create my-app-network
+docker network create {NETWORK_NAME}
 ```
 
 * Build Server Docker Image
@@ -17,7 +17,16 @@ docker build --build-arg SERVER_PORT={SERVER_PORT} -t server_env -f Dockerfile.s
 * Run Server Docker Container 
 
 ```
-docker run --rm --name {SERVER_HOSTNAME} --network my-app-network -p {SERVER_PORT}:{SERVER_PORT} server_env
+docker run --rm server_env
+
+or
+
+# Using Docker Network
+docker run --rm --name {SERVER_HOSTNAME} server_env
+
+or
+
+docker run --rm --name {SERVER_HOSTNAME} --network {NETWORK_NAME} server_env
 ```
 
 
@@ -27,12 +36,53 @@ Run Client
 * Build Client Docker Image
 
 ```
+docker build --build-arg SERVER_HOSTNAME={SERVER_IP} --build-arg SERVER_PORT={SERVER_PORT} -t client_env -f Dockerfile.client .
+
+or
+
 docker build --build-arg SERVER_HOSTNAME={SERVER_HOSTNAME} --build-arg SERVER_PORT={SERVER_PORT} -t client_env -f Dockerfile.client .
 ```
 
 * Run Client Docker Container 
 
 ```
-docker run --rm --network my-app-network client_env
+docker run --rm client_env
+
+or
+
+docker run --rm --network {NETWORK_NAME} client_env
 ```
 
+
+Run Server with Nginx Proxy
+==============================
+
+* Domain Setup: If you don't have a domain, use [DuckDNS](https://www.duckdns.org/). (e.g. test.duckdns.org)
+
+* Check Public IP
+
+```
+curl ifconfig.me
+nslookup {DOMAIN_NAME}
+```
+
+* Run Docker Compose of Certbot service 
+
+    * Docker Compose to run the Certbot service one time for the purpose of issuing a new SSL/TLS certificate
+
+    * Command Breakdown
+        * **`docker-compose run`**: Executes a one-time command for a service defined in `docker-compose.yml`.
+        * **`--rm`**: Automatically removes the container after the command exits. Ideal for one-off tasks like issuing certificates.
+        * **`--service-ports`**: Publishes the service's defined ports to the host. Necessary for Certbot to use port 80/443 for domain validation.
+        * **`certbot`**: The name of the service to run.
+        * **`certonly`**: A Certbot subcommand to obtain a certificate without automatically modifying web server configurations.
+
+    * Certbot Options
+        * **`-d {DOMAIN_NAME}`**: Specifies the domain name(s) to issue a certificate for.
+        * **`--email {EMAIL_ADDRESS}`**: The email address for registration and certificate expiration notices.
+        * **`--agree-tos`**: Agrees to the Let's Encrypt Terms of Service.
+        * **`--no-eff-email`**: Opts out of sharing your email with the Electronic Frontier Foundation (EFF).
+
+```
+docker-compose run --rm --service-ports certbot certonly -d {DOMAIN_NAME} --email {EMAIL_ADDRESS}--agree-tos --no-eff-email
+```
