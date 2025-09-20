@@ -2,7 +2,7 @@ Run Server
 ==============================
 
 <details>
-<summary>Run Process</summary>
+<summary></summary>Server Execution Procedure</summary>
       
 1. Create Docker Network
     * Containers on the same network can communicate with each other by their container name.
