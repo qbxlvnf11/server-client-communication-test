@@ -1,31 +1,31 @@
 Run Server
 ==============================
 
-* Create Docker Network
+1. Create Docker Network
     * Containers on the same network can communicate with each other by their container name.
 
 ```
 docker network create {NETWORK_NAME}
 ```
 
-* Build Server Docker Image
+2. Build Server Docker Image
 
 ```
 docker build --build-arg SERVER_PORT={SERVER_PORT} -t server_env -f Dockerfile.server .
 ```
 
-* Run Server Docker Container 
+3. Run Server Docker Container 
 
 ```
 docker run --rm server_env
 
 or
 
-# Using Docker Network
 docker run --rm --name {SERVER_HOSTNAME} server_env
 
 or
 
+# Using Docker Network
 docker run --rm --name {SERVER_HOSTNAME} --network {NETWORK_NAME} server_env
 ```
 
@@ -33,7 +33,7 @@ docker run --rm --name {SERVER_HOSTNAME} --network {NETWORK_NAME} server_env
 Run Client
 ==============================
 
-* Build Client Docker Image
+1. Build Client Docker Image
 
 ```
 docker build --build-arg SERVER_HOSTNAME={SERVER_IP} --build-arg SERVER_PORT={SERVER_PORT} -t client_env -f Dockerfile.client .
@@ -43,13 +43,14 @@ or
 docker build --build-arg SERVER_HOSTNAME={SERVER_HOSTNAME} --build-arg SERVER_PORT={SERVER_PORT} -t client_env -f Dockerfile.client .
 ```
 
-* Run Client Docker Container 
+2. Run Client Docker Container 
 
 ```
 docker run --rm client_env
 
 or
 
+# Using Docker Network
 docker run --rm --network {NETWORK_NAME} client_env
 ```
 
@@ -57,16 +58,16 @@ docker run --rm --network {NETWORK_NAME} client_env
 Run Server with Nginx Proxy
 ==============================
 
-* Domain Setup: If you don't have a domain, use [DuckDNS](https://www.duckdns.org/). (e.g. test.duckdns.org)
+1. Domain Setup: If you don't have a domain, use [DuckDNS](https://www.duckdns.org/). (e.g. test.duckdns.org)
 
-* Check Public IP
+2. Check Public IP
 
 ```
 curl ifconfig.me
 nslookup {DOMAIN_NAME}
 ```
 
-* Run Docker Compose of Certbot service 
+3. Run Docker Compose of Certbot service 
 
     * Docker Compose to run the Certbot service one time for the purpose of issuing a new SSL/TLS certificate
 
