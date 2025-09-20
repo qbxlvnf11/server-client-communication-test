@@ -1,6 +1,9 @@
 Run Server
 ==============================
 
+<details>
+<summary>Run Process</summary>
+      
 1. Create Docker Network
     * Containers on the same network can communicate with each other by their container name.
 
@@ -29,6 +32,7 @@ or
 docker run --rm --name {SERVER_HOSTNAME} --network {NETWORK_NAME} server_env
 ```
 
+</details>
 
 Run Client
 ==============================
@@ -58,9 +62,10 @@ docker run --rm --network {NETWORK_NAME} client_env
 Run Server with Nginx Proxy
 ==============================
 
-1. Domain Setup: If you don't have a domain, use [DuckDNS](https://www.duckdns.org/). (e.g. test.duckdns.org)
+1. Domain Setup
+   * If you don't have a domain, use [DuckDNS](https://www.duckdns.org/). (e.g. test.duckdns.org)
 
-2. Check Public IP
+3. Check Public IP
 
 ```
 curl ifconfig.me
