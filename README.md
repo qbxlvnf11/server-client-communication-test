@@ -4,59 +4,70 @@ Run Server
 <details>
 <summary>Server Execution Procedure</summary>
       
-1. Create Docker Network
+1. Create Docker Network in Server
     * Containers on the same network can communicate with each other by their container name.
+    * Docker's built-in DNS server automatically resolves container names to their internal IP addresses.
 
 ```
+# E.g. {NETWORK_NAME}=test_network
 docker network create {NETWORK_NAME}
 ```
 
 2. Build Server Docker Image
 
 ```
+# E.g. {SERVER_PORT}=8001
 docker build --build-arg SERVER_PORT={SERVER_PORT} -t server_env -f Dockerfile.server .
 ```
 
 3. Run Server Docker Container 
 
 ```
-docker run --rm server_env
+# E.g. {DOCKER_NAME}=test_server, {SERVER_PORT}=8001, {NETWORK_NAME}=test_network
+export PUBLIC_IP=$(curl -s ifconfig.me)
+docker run --rm -d --name {DOCKER_NAME} -p {SERVER_PORT}:{SERVER_PORT} --network {NETWORK_NAME} -e PUBLIC_IP=$PUBLIC_IP server_env
+```
 
-or
+4. Check Real-Time Logs
 
-docker run --rm --name {SERVER_HOSTNAME} server_env
-
-or
-
-# Using Docker Network
-docker run --rm --name {SERVER_HOSTNAME} --network {NETWORK_NAME} server_env
+```
+# E.g. {DOCKER_NAME}=test_server
+docker logs -f {DOCKER_NAME}
 ```
 
 </details>
 
+
 Run Client
 ==============================
 
-1. Build Client Docker Image
+<details>
+<summary>Client Execution Procedure</summary>
+      
+1. Create Docker Network in Client
+    * Containers on the same network can communicate with each other by their container name.
+    * Docker's built-in DNS server automatically resolves container names to their internal IP addresses.
 
 ```
+# E.g. {NETWORK_NAME}=test_network
+docker network create {NETWORK_NAME}
+```
+
+2. Build Client Docker Image
+
+```
+# E.g. {SERVER_IP}=Public IP of Server (192.0.0.1), {SERVER_PORT}=8001
 docker build --build-arg SERVER_HOSTNAME={SERVER_IP} --build-arg SERVER_PORT={SERVER_PORT} -t client_env -f Dockerfile.client .
-
-or
-
-docker build --build-arg SERVER_HOSTNAME={SERVER_HOSTNAME} --build-arg SERVER_PORT={SERVER_PORT} -t client_env -f Dockerfile.client .
 ```
 
-2. Run Client Docker Container 
+3. Run Client Docker Container 
 
 ```
-docker run --rm client_env
-
-or
-
-# Using Docker Network
-docker run --rm --network {NETWORK_NAME} client_env
+# E.g. {DOCKER_NAME}=test_server, {NETWORK_NAME}=test_network
+docker run --rm -d --name {DOCKER_NAME} --network {NETWORK_NAME} client_env
 ```
+
+</details>
 
 
 Run Server with Nginx Proxy
