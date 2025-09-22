@@ -73,6 +73,9 @@ docker run --rm -d --name {DOCKER_NAME} --network {NETWORK_NAME} client_env
 Run Server with Nginx Proxy
 ==============================
 
+<details>
+<summary>Nginx Proxy Server Execution Procedure</summary>
+
 1. Domain Setup
    * If you don't have a domain, use [DuckDNS](https://www.duckdns.org/). (e.g. test.duckdns.org)
 
@@ -103,3 +106,5 @@ nslookup {DOMAIN_NAME}
 ```
 docker-compose run --rm --service-ports certbot certonly -d {DOMAIN_NAME} --email {EMAIL_ADDRESS}--agree-tos --no-eff-email
 ```
+
+</details>
