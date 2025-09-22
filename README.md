@@ -79,13 +79,13 @@ Run Server with Nginx Proxy for HTTPS Server (Self-Signed Certificate)
 1. Generate Self-Signed Certificate
 
 ```
-bash generate-selfsigned-cert.sh
+bash generate-self-signed-cert.sh
 ```
 
 2. Run Docker Compose
 
 ```
-docker-compose up --build
+docker-compose -f self-signed-docker-compose.yml up --build
 ```
 
 3. Turn-off Docker Compose
