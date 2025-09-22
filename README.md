@@ -70,16 +70,43 @@ docker run --rm -d --name {DOCKER_NAME} --network {NETWORK_NAME} client_env
 </details>
 
 
-Run Server with Nginx Proxy
+Run Server with Nginx Proxy for HTTPS Server (Self-Signed Certificate)
 ==============================
 
 <details>
-<summary>Nginx Proxy Server Execution Procedure</summary>
+<summary>Nginx Proxy Server Execution Procedure for HTTPS Server</summary>
+
+1. Generate Self-Signed Certificate
+
+```
+bash generate-selfsigned-cert.sh
+```
+
+2. Run Docker Compose
+
+```
+docker-compose up --build
+```
+
+3. Turn-off Docker Compose
+
+```
+docker-compose down && docker compose up --build
+```
+
+</details>
+
+
+Run Server with Nginx Proxy for HTTPS Server (Official Certificate)
+==============================
+
+<details>
+<summary>Nginx Proxy Server Execution Procedure for HTTPS Server</summary>
 
 1. Domain Setup
    * If you don't have a domain, use [DuckDNS](https://www.duckdns.org/). (e.g. test.duckdns.org)
 
-3. Check Public IP
+2. Check Public IP
 
 ```
 curl ifconfig.me
