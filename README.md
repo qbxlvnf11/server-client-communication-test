@@ -94,8 +94,7 @@ echo "APP_PORT={APP_PORT}" >> .env
 3. Run Docker Compose
 
 ```
-echo "NGINX_PORT=8001" > .env
-echo "APP_PORT=8000" >> .env
+docker-compose -f self-signed-docker-compose.yml --env-file .env up --build --force-recreate
 ```
 
 4. Turn-off Docker Compose
