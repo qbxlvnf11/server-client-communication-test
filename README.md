@@ -82,13 +82,23 @@ Run Server with Nginx Proxy for HTTPS Server (Self-Signed Certificate)
 bash generate-self-signed-cert.sh
 ```
 
-2. Run Docker Compose
+2. Generate ".env" file
+    * Creating parameters in the settings file of docker compose and nginx
 
 ```
-docker-compose -f self-signed-docker-compose.yml up --build
+# E.g. {NGINX_PORT}=8000, {APP_PORT}=8001
+echo "NGINX_PORT={NGINX_PORT}" > .env
+echo "APP_PORT={APP_PORT}" >> .env
 ```
 
-3. Turn-off Docker Compose
+3. Run Docker Compose
+
+```
+echo "NGINX_PORT=8001" > .env
+echo "APP_PORT=8000" >> .env
+```
+
+4. Turn-off Docker Compose
 
 ```
 docker-compose down && docker compose up --build
