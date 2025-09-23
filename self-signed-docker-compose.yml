@@ -1,15 +1,21 @@
-server {
-    listen ${NGINX_PORT} ssl;
-    server_name 0.0.0.0;
+version: '3'
 
-    ssl_certificate /etc/nginx/ssl/server.crt;
-    ssl_certificate_key /etc/nginx/ssl/server.key;
+services:
+  server: 
+    build: 
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "${APP_PORT}:8000"
 
-    location / {
-        proxy_pass http://app:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
+  nginx:
+    image: nginx:latest
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    volumes:
+      - ./self-signed-nginx.conf:/etc/nginx/conf.d/self-signed-nginx.conf
+      - ./certs/server.crt:/etc/nginx/ssl/server.crt:ro
+      - ./certs/server.key:/etc/nginx/ssl/server.key:ro
+    entrypoint: /bin/sh -c "envsubst '\$NGINX_PORT \$APP_PORT' < /etc/nginx/conf.d/self-signed-nginx.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    depends_on:
+      - server
